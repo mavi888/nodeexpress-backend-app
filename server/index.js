@@ -34,10 +34,10 @@ if (config.stage === 'local') {
 }
 
 // SET UP SERVER
-if (config.stage === 'local') {
-	console.log('Setting CORS for local testing');
-	app.use(cors());
-}
+//if (config.stage === 'local') {
+console.log('Setting CORS for local testing');
+app.use(cors());
+//}
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
