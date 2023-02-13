@@ -8,6 +8,8 @@ const cookieParser = require('cookie-parser');
 
 const config = require('./config/key');
 
+require('dotenv').config();
+
 // DATABASE
 console.log('Configuring MongoDB');
 const mongoose = require('mongoose');
