@@ -9,10 +9,11 @@
 	},
 	"license": "MIT",
 	"scripts": {
-		"start": "node server/index.js",
-		"backend": "nodemon server/index.js",
+		"build": "npx tsc",
+		"start": "node build/server/index.js",
+		"backend": "nodemon -q build/server/index.js",
 		"frontend": "npm run front --prefix client",
-		"dev": "concurrently \"npm run backend\" \"npm run start --prefix client\"",
+		"dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server/index.js\"",
 		"test": "jest"
 	},
 	"dependencies": {

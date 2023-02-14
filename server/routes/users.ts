@@ -1,10 +1,13 @@
+import { Express, Request, Response } from 'express';
+
 const express = require('express');
 const router = express.Router();
+
 const { auth } = require('../middleware/auth');
 
-const userController = require('../controllers/userController');
+import { registerNewUser } from '../controllers/userController';
 
-router.get('/auth', auth, (req, res) => {
+router.get('/auth', auth, (req: any, res: Response) => {
 	res.status(200).json({
 		_id: req.user._id,
 		isAdmin: req.user.role === 0 ? false : true,
@@ -19,11 +22,19 @@ router.get('/auth', auth, (req, res) => {
 	});
 });
 
-router.post('/register', async (req, res) => {
+/*
+{
+  "email" :  "test@gmail.com",
+  "image" :  "http://gravatar.com/avatar/1676390076?d=identicon",
+  "name" :  "marcia",
+  "password" :  "Tomate1234@"
+}
+*/
+router.post('/register', async (req: Request, res: Response) => {
 	const userInformation = req.body;
 
 	try {
-		await userController.registerNewUser(userInformation);
+		await registerNewUser(userInformation);
 		return res.status(200).json({
 			success: true,
 		});

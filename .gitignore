@@ -2,3 +2,4 @@ node_modules/
 .DS_Store
 server/config/dev.js
 .env
+build/

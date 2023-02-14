@@ -5,14 +5,6 @@ const { auth } = require('../middleware/auth');
 const productController = require('../controllers/productController');
 const dynamoTestController = require('../controllers/dynamoTestController');
 
-router.get('/test', async (req, res) => {
-	console.log('test');
-
-	await dynamoTestController.testConnection();
-
-	return res.status(200).json({ result: 'test called' });
-});
-
 router.post('/uploadProduct', auth, async (req, res) => {
 	const productDetail = req.body;
 

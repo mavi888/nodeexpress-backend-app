@@ -41,6 +41,7 @@ export class User extends Item {
 }
 
 export const registerUser = async (user: User) => {
+	console.log('register new user model');
 	return await createItem(user);
 };
 
