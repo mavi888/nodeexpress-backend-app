@@ -55,7 +55,7 @@ app.get('/', (req: Request, res: Response) => {
 	res.send('Hi there!');
 });
 app.use('/api/users', require('./routes/users'));
-//app.use('/api/product', require('./routes/product'));
+app.use('/api/product', require('./routes/product'));
 //app.use('/api/store', require('./routes/store'));
 
 // START SERVER

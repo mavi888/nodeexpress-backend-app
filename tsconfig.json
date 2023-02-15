@@ -6,7 +6,8 @@
 		"outDir": "./build",
 		"esModuleInterop": true,
 		"strict": true,
-		"allowJs": true
+		"allowJs": true,
+		"noImplicitAny": false
 	},
 	"exclude": ["./node_modules", "./tests"]
 }

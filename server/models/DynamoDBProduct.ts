@@ -3,7 +3,7 @@ import { getClient } from './client';
 
 export class Product extends Item {
 	productId: string;
-	writerEmail: string; //'userID?',
+	writerEmail: string;
 	title: string;
 	description: string;
 	price: number;

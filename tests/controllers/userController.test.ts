@@ -3,6 +3,8 @@ import { registerNewUser } from '../../server/controllers/userController';
 import * as user from '../../server/models/DynamoDBUser';
 
 test('UserController: register new user', async () => {
+	jest.clearAllMocks();
+
 	const input = {
 		email: 'test@gmail.com',
 		image: 'http://gravatar.com/avatar/1676390076?d=identicon',
