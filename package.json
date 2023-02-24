@@ -10,9 +10,9 @@
 	"license": "MIT",
 	"scripts": {
 		"build": "npx tsc",
-		"start": "node build/server/index.js",
+		"start": "node dist/server/index.js",
 		"prod": "node app/server/index.js",
-		"prodB": "nodemon build/server/index.js",
+		"prodB": "node dist/server/index.js",
 		"dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server/index.js\"",
 		"test": "jest"
 	},

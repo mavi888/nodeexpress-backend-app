@@ -3,4 +3,4 @@ node_modules/
 server/config/dev.js
 .env
 build/
-build/*
+dist/
