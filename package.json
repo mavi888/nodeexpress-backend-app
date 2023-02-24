@@ -11,7 +11,7 @@
 	"scripts": {
 		"build": "npx tsc",
 		"start": "node build/server/index.js",
-		"backend": "nodemon -q build/server/index.js",
+		"backend": "nodemon server/index.js",
 		"dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server/index.js\"",
 		"test": "jest"
 	},
