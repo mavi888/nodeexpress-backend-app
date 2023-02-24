@@ -1,7 +1,6 @@
 import { Express, Request, Response } from 'express';
 
 const express = require('express');
-//import dotenv from 'dotenv';
 
 const app = express();
 const path = require('path');
@@ -11,39 +10,11 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 const config = require('./config/key');
-
 require('dotenv').config();
 
-// DATABASE
-console.log('Configuring MongoDB');
-const mongoose = require('mongoose');
-
-let mongoURI;
-if (config.stage === 'local') {
-	console.log('Stage LOCAL');
-
-	mongoURI = config.mongoURI;
-
-	const connect = mongoose
-		.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-		.then(() => console.log('MongoDB Connected...'))
-		.catch((err: any) => console.log(err));
-} else {
-	console.log('Stage CLOUD');
-
-	config.getMongoURI().then((mongoURI: string) => {
-		const connect = mongoose
-			.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-			.then(() => console.log('MongoDB Connected...'))
-			.catch((err: any) => console.log(err));
-	});
-}
-
 // SET UP SERVER
-//if (config.stage === 'local') {
-console.log('Setting CORS for local testing');
+console.log('Setting CORS');
 app.use(cors());
-//}
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -56,7 +27,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 app.use('/api/users', require('./routes/users'));
 app.use('/api/product', require('./routes/product'));
-//app.use('/api/store', require('./routes/store'));
+app.use('/api/store', require('./routes/store'));
 
 // START SERVER
 const port = process.env.PORT || 8080;

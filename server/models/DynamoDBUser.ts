@@ -1,5 +1,4 @@
 import { Item, createItem, getItem, deleteItem } from './base';
-import { getClient } from './client';
 
 export class User extends Item {
 	name: string;
@@ -41,7 +40,6 @@ export class User extends Item {
 }
 
 export const registerUser = async (user: User) => {
-	console.log('register new user model');
 	return await createItem(user);
 };
 

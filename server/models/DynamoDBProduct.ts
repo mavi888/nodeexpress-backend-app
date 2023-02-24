@@ -77,10 +77,10 @@ export class Product extends Item {
 			writerEmail: this.writerEmail,
 			title: this.title,
 			description: this.description,
-			price: this.price.toString(),
+			price: this.price,
 			images: this.images,
-			category: this.category.toString(),
-			sold: this.sold.toString(),
+			category: this.category,
+			sold: this.sold,
 		};
 	}
 
@@ -211,6 +211,35 @@ export const findProductByTitle = async (title: string) => {
 	try {
 		const response = await client.query(params);
 		return response.Items.map(Product.fromItem);
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+export const updateProductSoldQuantity = async (
+	productId: string,
+	quantitySold: number
+) => {
+	const product = new Product(productId, '', '', 0, '', [], 0, 0);
+
+	const client = getClient();
+
+	const params = {
+		TableName: process.env.TABLE_NAME,
+		Key: product.keys(),
+		UpdateExpression: 'SET #sold = #sold + :quantitySold',
+		ExpressionAttributeNames: {
+			'#sold': 'sold',
+		},
+		ExpressionAttributeValues: {
+			':quantitySold': quantitySold,
+		},
+	};
+
+	try {
+		const response = await client.update(params);
+		return response;
 	} catch (error) {
 		console.log(error);
 		throw error;

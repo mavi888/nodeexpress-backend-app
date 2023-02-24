@@ -7,19 +7,16 @@ const { auth } = require('../middleware/auth');
 
 import { registerNewUser } from '../controllers/userController';
 
-// TODO
 router.get('/auth', auth, (req: any, res: Response) => {
 	res.status(200).json({
-		_id: req.user._id,
+		_id: req.user.email,
 		isAdmin: req.user.role === 0 ? false : true,
 		isAuth: true,
 		email: req.user.email,
 		name: req.user.name,
 		lastname: req.user.lastname,
 		role: req.user.role,
-		image: req.user.image,
 		cart: req.user.cart,
-		history: req.user.history,
 	});
 });
 

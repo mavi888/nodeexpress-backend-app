@@ -8,7 +8,7 @@ const cognitoIdentityServiceProvider = new CognitoIdentityProviderClient({
 
 const { CognitoJwtVerifier } = require('aws-jwt-verify');
 
-const { User } = require('../models/User');
+import { findUserByEmailWithCart } from '../controllers/userController';
 
 const config = require('../config/key');
 
@@ -23,17 +23,18 @@ let auth = (req, res, next) => {
 		.then((valid) => {
 			if (valid) {
 				getCognitoUser(jwtToken).then((email) => {
-					User.findByEmail(email, (err, user) => {
-						if (err) throw err;
-						if (!user)
+					findUserByEmailWithCart(email)
+						.then((user) => {
+							req.user = user;
+							next();
+						})
+						.catch((err) => {
+							console.log(err);
 							return res.json({
 								isAuth: false,
 								error: true,
 							});
-
-						req.user = user;
-						next();
-					});
+						});
 				});
 			} else {
 				throw Error('Not valid Token');

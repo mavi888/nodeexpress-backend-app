@@ -6,18 +6,24 @@ export class Order extends Item {
 	userId: string;
 	date: string;
 	status: string; // CURRENT / COMPLETED
+	totalPrice: number;
+	totalQuantity: number;
 
 	constructor(
 		orderId: string,
 		userId?: string,
 		date?: string,
-		status?: string
+		status?: string,
+		totalPrice?: number,
+		totalQuantity?: number
 	) {
 		super();
 		this.orderId = orderId;
 		this.userId = userId || '';
 		this.date = date || '';
 		this.status = status || 'CURRENT';
+		this.totalPrice = totalPrice || 0;
+		this.totalQuantity = totalQuantity || 0;
 	}
 
 	get pk(): string {
@@ -54,12 +60,21 @@ export class Order extends Item {
 			userId: this.userId,
 			date: this.date,
 			status: this.status,
+			totalPrice: this.totalPrice,
+			totalQuantity: this.totalQuantity,
 		};
 	}
 
 	static fromItem(item?: any): Order {
 		if (!item) throw new Error('No item');
-		return new Order(item.orderId, item.userId, item.date, item.status);
+		return new Order(
+			item.orderId,
+			item.userId,
+			item.date,
+			item.status,
+			item.totalPrice,
+			item.totalQuantity
+		);
 	}
 }
 
@@ -129,17 +144,20 @@ export const getUserCurrentCart = async (userId: string) => {
 			':sk': 'ORDER#CURRENT',
 		},
 	};
-
 	try {
 		const response = await client.query(params);
 		return response.Items.map(Order.fromItem);
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 };
 
-export const purchaseOrder = async (orderId: string, date: string) => {
+export const purchaseOrder = async (
+	orderId: string,
+	date: string,
+	totalPrice: number,
+	totalQuantity: number
+) => {
 	const order = new Order(orderId);
 
 	const client = getClient();
@@ -147,14 +165,20 @@ export const purchaseOrder = async (orderId: string, date: string) => {
 	const params = {
 		TableName: process.env.TABLE_NAME,
 		Key: order.keys(),
-		UpdateExpression: 'SET #st = :status, #dt = :date',
+		UpdateExpression:
+			'SET #st = :status, #dt = :date, #tp = :price, #tq = :quantity, GSI3SK = :orderId',
 		ExpressionAttributeNames: {
 			'#st': 'status',
 			'#dt': 'date',
+			'#tp': 'totalPrice',
+			'#tq': 'totalQuantity',
 		},
 		ExpressionAttributeValues: {
 			':status': 'COMPLETED',
 			':date': date,
+			':price': totalPrice,
+			':quantity': totalQuantity,
+			':orderId': `ORDER#${orderId}`,
 		},
 	};
 

@@ -1,5 +1,3 @@
-//const { Product } = require("../models/Product");
-
 import {
 	Product,
 	createProduct,
@@ -8,6 +6,7 @@ import {
 	findProductByTitle,
 	filterProductByPrice,
 	findProductsByCategory,
+	updateProductSoldQuantity,
 } from '../models/DynamoDBProduct';
 import { ulid } from 'ulid';
 
@@ -24,10 +23,10 @@ export const addProduct = async (productData: any) => {
 		ulid(),
 		productData.writer,
 		productData.title,
-		productData.price,
+		parseInt(productData.price),
 		productData.description,
 		productData.images,
-		productData.category
+		parseInt(productData.category)
 	);
 	await createProduct(product);
 	return product;
@@ -50,10 +49,12 @@ export const findProductWithQuery = async (
 	}
 
 	if (category != undefined && category.length > 0) {
-		const products = Promise.all(
+		let products = [];
+
+		await Promise.all(
 			category.map(async (c) => {
 				const prod = await findProductsByCategory(c);
-				return prod;
+				products = products.concat(prod);
 			})
 		);
 
@@ -76,20 +77,7 @@ export const findProductById = async (productIds: string[]) => {
 	return products;
 };
 
-/*
-updateProductQuantity = async (productId, quantity) => {
-    await Product.updateOne({ _id: productId }, 
-        {
-            $inc: {
-                "sold": quantity
-            }
-        },
-        { new: false })
-}
-
-module.exports = {
-    addProduct,
-    findProductsWithQuery,
-    findProductById,
-    updateProductQuantity
-}*/
+export const updateProductSold = async (productId, quantity) => {
+	await updateProductSoldQuantity(productId, quantity);
+	return;
+};

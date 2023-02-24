@@ -80,6 +80,26 @@ export const deleteOrderItem = async (orderId: string, productId: string) => {
 	}
 };
 
+export const getOrderItemsByOrderId = async (orderId: string) => {
+	const client = getClient();
+
+	const params = {
+		TableName: process.env.TABLE_NAME,
+		KeyConditionExpression: 'PK = :pk',
+		ExpressionAttributeValues: {
+			':pk': `ORDERITEMS#${orderId}`,
+		},
+	};
+
+	try {
+		const response = await client.query(params);
+		return response.Items.map(OrderItem.fromItem);
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
 export const addItemToOrder = async (
 	orderId: string,
 	productId: string,
@@ -95,6 +115,40 @@ export const addItemToOrder = async (
 		Key: orderItem.keys(),
 		UpdateExpression:
 			'SET #quantity = #quantity + :q, #totalPrice = #totalPrice + :tp',
+		ExpressionAttributeNames: {
+			'#quantity': 'quantity',
+			'#totalPrice': 'totalPrice',
+		},
+		ExpressionAttributeValues: {
+			':q': quantity,
+			':tp': totalPrice,
+		},
+	};
+
+	try {
+		const response = await client.update(params);
+		return response;
+	} catch (err) {
+		console.log(err);
+		throw err;
+	}
+};
+
+export const removeItemToOrder = async (
+	orderId: string,
+	productId: string,
+	quantity: number,
+	totalPrice: number
+) => {
+	const orderItem = new OrderItem(orderId, productId, '', quantity, totalPrice);
+
+	const client = getClient();
+
+	const params = {
+		TableName: process.env.TABLE_NAME,
+		Key: orderItem.keys(),
+		UpdateExpression:
+			'SET #quantity = #quantity - :q, #totalPrice = #totalPrice - :tp',
 		ExpressionAttributeNames: {
 			'#quantity': 'quantity',
 			'#totalPrice': 'totalPrice',

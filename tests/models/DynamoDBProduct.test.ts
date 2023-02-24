@@ -7,6 +7,7 @@ import {
 	findProductsByCategory,
 	getProduct,
 	findProductByTitle,
+	updateProductSoldQuantity,
 } from '../../server/models/DynamoDBProduct';
 
 test('ProductsModel: CRUD operations on a product', async () => {
@@ -308,4 +309,20 @@ test('ProductsModel: find product by title no match', async () => {
 	//3. Delete products
 	await deleteProduct('productId1');
 	await deleteProduct('productId2');
+});
+
+test('ProductModel: update product sold quantity', async () => {
+	//1. Create a product
+	const product1 = new Product('productId1', '', '', 123);
+	await createProduct(product1);
+
+	//2. Update the product sold quantity
+	await updateProductSoldQuantity('productId1', 10);
+
+	//3. Get the product
+	const product = await getProduct('productId1');
+	expect(product.sold).toBe(10);
+
+	//4. Delete the product
+	await deleteProduct('productId1');
 });

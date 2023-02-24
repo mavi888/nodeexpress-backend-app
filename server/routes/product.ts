@@ -67,12 +67,24 @@ router.post('/uploadProduct', auth, async (req: Request, res: Response) => {
 router.post('/getProducts', async (req: Request, res: Response) => {
 	let filters = req.body.filters;
 
-	const price = filters.price;
-	const category = filters.category;
-	let term = req.body.searchTerm;
+	let iPrice = undefined;
+	let fPrice = undefined;
+	let category = undefined;
+	let term = undefined;
+
+	if (filters && filters.price) {
+		iPrice = filters.price[0];
+		fPrice = filters.price[1];
+	}
+	if (filters && filters.category) {
+		category = filters.category;
+	}
+	if (req.body && req.body.searchTerm) {
+		term = req.body.searchTerm;
+	}
 
 	try {
-		const products = await findProductWithQuery(price, category, term);
+		const products = await findProductWithQuery(category, term, iPrice, fPrice);
 		return res
 			.status(200)
 			.json({ success: true, products, postSize: products.length });
@@ -91,7 +103,7 @@ router.get('/products_by_id', async (req: Request, res: Response) => {
 
 	let productIdsArray: string[] = [];
 
-	if (type === 'array' && productIds != undefined) {
+	if (productIds != undefined) {
 		productIdsArray = productIds.split(',');
 	}
 

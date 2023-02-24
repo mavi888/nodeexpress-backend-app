@@ -21,7 +21,6 @@ type Key = {
 
 // ------ CRUD OPERATIONS -------
 export const createItem = async (item: Item) => {
-	console.log('create item base');
 	const client = getClient();
 
 	const params = {
@@ -30,8 +29,6 @@ export const createItem = async (item: Item) => {
 		ConditionExpression:
 			'attribute_not_exists(PK) and attribute_not_exists(SK)',
 	};
-
-	console.log(params);
 
 	try {
 		await client.put(params);

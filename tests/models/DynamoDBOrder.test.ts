@@ -145,7 +145,7 @@ test('OrderModel: Mark order as completed', async () => {
 	await createOrder(order1);
 
 	//2. Mark order as completed
-	await purchaseOrder('orderId1', '1676317222');
+	await purchaseOrder('orderId1', '1676317222', 1, 10);
 
 	const order = await getOrder('orderId1');
 	expect(order.orderId).toEqual('orderId1');
