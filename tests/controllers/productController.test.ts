@@ -10,10 +10,10 @@ test('ProductController: add a new product', async () => {
 	jest.clearAllMocks();
 
 	const input = {
-		category: '5',
+		category: 5,
 		description: 'test description',
 		images: ['uploads/image (6).png'],
-		price: '122',
+		price: 122,
 		title: 'test title',
 		writer: '63d8274d37c7f13e069618a2',
 	};
@@ -25,10 +25,10 @@ test('ProductController: add a new product', async () => {
 	const productSaved = await addProduct(input);
 
 	const inputProduct = {
-		category: '5',
+		category: 5,
 		description: 'test description',
 		images: ['uploads/image (6).png'],
-		price: '122',
+		price: 122,
 		sold: 0,
 		productId: productSaved.productId,
 		title: 'test title',
