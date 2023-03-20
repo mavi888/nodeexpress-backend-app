@@ -19,7 +19,25 @@ export const findUserByEmailWithCart = async (userEmail: string) => {
 		email: user.email,
 		name: user.name,
 		lastname: user.lastname,
-		cart: cart,
+		orderId: cart.orderId,
+		cart: cart.cartDetail,
+	};
+	return result;
+};
+
+export const getUpdatedUserWithCart = async (
+	userEmail: string,
+	userName: string,
+	userLastName: string
+) => {
+	const cart = await getCartInfo(userEmail);
+
+	const result = {
+		email: userEmail,
+		name: userName,
+		lastname: userLastName,
+		orderId: cart.orderId,
+		cart: cart.cartDetail,
 	};
 	return result;
 };

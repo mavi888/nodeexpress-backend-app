@@ -11,7 +11,7 @@ export class Order extends Item {
 
 	constructor(
 		orderId: string,
-		userId?: string,
+		userId: string,
 		date?: string,
 		status?: string,
 		totalPrice?: number,
@@ -27,18 +27,10 @@ export class Order extends Item {
 	}
 
 	get pk(): string {
-		return `ORDER#${this.orderId}`;
+		return `USER#${this.userId}`;
 	}
 	get sk(): string {
 		return `ORDER#${this.orderId}`;
-	}
-
-	get gsi1pk(): string {
-		return `ORDER#${this.userId}`;
-	}
-
-	get gsi1sk(): string {
-		return `ORDER#${this.date}`;
 	}
 
 	get gsi3pk(): string {
@@ -52,8 +44,6 @@ export class Order extends Item {
 	toItem(): Record<string, unknown> {
 		return {
 			...this.keys(),
-			GSI1PK: this.gsi1pk,
-			GSI1SK: this.gsi1sk,
 			GSI3PK: this.gsi3pk,
 			GSI3SK: this.gsi3sk,
 			orderId: this.orderId,
@@ -79,12 +69,25 @@ export class Order extends Item {
 }
 
 export const createOrder = async (order: Order) => {
-	return await createItem(order);
+	const client = getClient();
+
+	const params = {
+		TableName: process.env.TABLE_NAME,
+		Item: order.toItem(),
+		ConditionExpression: 'attribute_not_exists(SK)',
+	};
+
+	try {
+		await client.put(params);
+		return order;
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
 };
 
-export const getOrder = async (orderId: string) => {
-	const order = new Order(orderId);
-
+export const getOrder = async (userId: string, orderId: string) => {
+	const order = new Order(orderId, userId);
 	try {
 		const response = await getItem(order);
 		return Order.fromItem(response.Item);
@@ -94,11 +97,18 @@ export const getOrder = async (orderId: string) => {
 	}
 };
 
-export const deleteOrder = async (orderId: string) => {
-	const order = new Order(orderId);
+export const deleteOrder = async (userId: string, orderId: string) => {
+	const client = getClient();
+
+	const order = new Order(orderId, userId);
+
+	const params = {
+		TableName: process.env.TABLE_NAME,
+		Key: order.keys(),
+	};
 
 	try {
-		const response = await deleteItem(order);
+		const response = await client.delete(params);
 		return response;
 	} catch (error) {
 		console.log(error);
@@ -111,14 +121,13 @@ export const getUserHistory = async (userId: string) => {
 
 	const params = {
 		TableName: process.env.TABLE_NAME,
-		IndexName: 'GSI1',
-		KeyConditionExpression: 'GSI1PK = :pk',
+		KeyConditionExpression: 'PK = :pk',
 		FilterExpression: '#st = :status',
 		ExpressionAttributeNames: {
 			'#st': 'status',
 		},
 		ExpressionAttributeValues: {
-			':pk': `ORDER#${userId}`,
+			':pk': `USER#${userId}`,
 			':status': 'COMPLETED',
 		},
 	};
@@ -153,12 +162,13 @@ export const getUserCurrentCart = async (userId: string) => {
 };
 
 export const purchaseOrder = async (
+	userId: string,
 	orderId: string,
 	date: string,
 	totalPrice: number,
 	totalQuantity: number
 ) => {
-	const order = new Order(orderId);
+	const order = new Order(orderId, userId);
 
 	const client = getClient();
 

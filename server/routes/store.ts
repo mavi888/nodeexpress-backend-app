@@ -15,11 +15,20 @@ import {
 } from '../controllers/storeController';
 
 router.get('/addToCart', auth, async (req: any, res: Response) => {
-	const userId = req.user.email;
+	const user = req.user;
 	const productId = req.query.productId;
+	const productTitle = req.query.productTitle;
+	const productImage = req.query.productImage;
+	const price = parseInt(req.query.price);
 
 	try {
-		const userUpdated = await addProductToCart(userId, productId);
+		const userUpdated = await addProductToCart(
+			user,
+			productId,
+			productTitle,
+			productImage,
+			price
+		);
 		return res.status(200).json(userUpdated.cart);
 	} catch (err) {
 		return res.json({ success: false, err });
@@ -27,11 +36,11 @@ router.get('/addToCart', auth, async (req: any, res: Response) => {
 });
 
 router.get('/removeFromCart', auth, async (req: any, res: Response) => {
-	const userId = req.user.email;
+	const user = req.user;
 	const itemIdToRemove = req.query._id;
 
 	try {
-		const r = await removeProductFromCart(userId, itemIdToRemove);
+		const r = await removeProductFromCart(user, itemIdToRemove);
 		return res.status(200).json(r);
 	} catch (err) {
 		return res.json({ success: false, err });
@@ -50,10 +59,10 @@ router.get('/userCartInfo', auth, async (req: any, res: Response) => {
 });
 
 router.post('/successBuy', auth, async (req: any, res: Response) => {
-	const userId = req.user.email;
+	const user = req.user;
 
 	try {
-		const cart = await buyItems(userId);
+		const cart = await buyItems(user);
 
 		return res.status(200).json({
 			success: true,

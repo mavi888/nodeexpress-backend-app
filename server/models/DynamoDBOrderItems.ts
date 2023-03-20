@@ -6,6 +6,8 @@ export class OrderItem extends Item {
 	productId: string;
 	userId: string;
 	quantity: number;
+	productImage: string;
+	productTitle: string;
 	totalPrice: number;
 
 	constructor(
@@ -13,6 +15,8 @@ export class OrderItem extends Item {
 		productId: string,
 		userId: string,
 		quantity: number,
+		productImage: string,
+		productTitle: string,
 		totalPrice: number
 	) {
 		super();
@@ -20,6 +24,8 @@ export class OrderItem extends Item {
 		this.productId = productId;
 		this.userId = userId;
 		this.quantity = quantity;
+		this.productImage = productImage;
+		this.productTitle = productTitle;
 		this.totalPrice = totalPrice;
 	}
 
@@ -37,6 +43,8 @@ export class OrderItem extends Item {
 			productId: this.productId,
 			userId: this.userId,
 			quantity: this.quantity,
+			productImage: this.productImage,
+			productTitle: this.productTitle,
 			totalPrice: this.totalPrice,
 		};
 	}
@@ -48,6 +56,8 @@ export class OrderItem extends Item {
 			item.productId,
 			item.userId,
 			item.quantity,
+			item.productImage,
+			item.productTitle,
 			item.totalPrice
 		);
 	}
@@ -58,7 +68,7 @@ export const createOrderItem = async (orderItem: OrderItem) => {
 };
 
 export const getOrderItems = async (orderId: string, productId: string) => {
-	const orderItem = new OrderItem(orderId, productId, '', 0, 0);
+	const orderItem = new OrderItem(orderId, productId, '', 0, '', '', 0);
 
 	try {
 		const response = await getItem(orderItem);
@@ -70,7 +80,7 @@ export const getOrderItems = async (orderId: string, productId: string) => {
 };
 
 export const deleteOrderItem = async (orderId: string, productId: string) => {
-	const orderItem = new OrderItem(orderId, productId, '', 0, 0);
+	const orderItem = new OrderItem(orderId, productId, '', 0, '', '', 0);
 
 	try {
 		await deleteItem(orderItem);
@@ -106,7 +116,7 @@ export const addItemToOrder = async (
 	quantity: number,
 	totalPrice: number
 ) => {
-	const orderItem = new OrderItem(orderId, productId, '', quantity, totalPrice);
+	const orderItem = new OrderItem(orderId, productId, '', 0, '', '', 0);
 
 	const client = getClient();
 
@@ -125,6 +135,8 @@ export const addItemToOrder = async (
 		},
 	};
 
+	console.log(params);
+
 	try {
 		const response = await client.update(params);
 		return response;
@@ -140,7 +152,15 @@ export const removeItemToOrder = async (
 	quantity: number,
 	totalPrice: number
 ) => {
-	const orderItem = new OrderItem(orderId, productId, '', quantity, totalPrice);
+	const orderItem = new OrderItem(
+		orderId,
+		productId,
+		'',
+		quantity,
+		'',
+		'',
+		totalPrice
+	);
 
 	const client = getClient();
 

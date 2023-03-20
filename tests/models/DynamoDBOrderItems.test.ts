@@ -10,7 +10,15 @@ import {
 
 test('OrderItemModel: CRUD operations on order item', async () => {
 	//1. Create order item
-	const orderItem = new OrderItem('orderId1', 'productId1', 'userId1', 1, 10);
+	const orderItem = new OrderItem(
+		'orderId1',
+		'productId1',
+		'userId1',
+		1,
+		'image',
+		'productTitle',
+		10
+	);
 
 	await createOrderItem(orderItem);
 
@@ -34,7 +42,15 @@ test('OrderItemModel: CRUD operations on order item', async () => {
 
 test('OrderItemModel: Add existing item to order', async () => {
 	//1. Create order item
-	const orderItem = new OrderItem('orderId1', 'productId1', 'userId1', 1, 10);
+	const orderItem = new OrderItem(
+		'orderId1',
+		'productId1',
+		'userId1',
+		1,
+		'image',
+		'productTitle',
+		10
+	);
 
 	await createOrderItem(orderItem);
 
@@ -51,9 +67,33 @@ test('OrderItemModel: Add existing item to order', async () => {
 
 test('OrderItemModel: get order items by OrderId', async () => {
 	//1. Create order items
-	const orderItem1 = new OrderItem('orderId1', 'productId1', 'userId1', 1, 10);
-	const orderItem2 = new OrderItem('orderId1', 'productId2', 'userId1', 2, 10);
-	const orderItem3 = new OrderItem('orderId1', 'productId3', 'userId1', 2, 10);
+	const orderItem1 = new OrderItem(
+		'orderId1',
+		'productId1',
+		'userId1',
+		1,
+		'image',
+		'productTitle',
+		10
+	);
+	const orderItem2 = new OrderItem(
+		'orderId1',
+		'productId2',
+		'userId1',
+		2,
+		'image',
+		'productTitle',
+		10
+	);
+	const orderItem3 = new OrderItem(
+		'orderId1',
+		'productId3',
+		'userId1',
+		2,
+		'image',
+		'productTitle',
+		10
+	);
 
 	await createOrderItem(orderItem1);
 	await createOrderItem(orderItem2);
@@ -72,7 +112,15 @@ test('OrderItemModel: get order items by OrderId', async () => {
 
 test('OrderItemModel: Create existing order item', async () => {
 	//1. Create order item
-	const orderItem = new OrderItem('orderId1', 'productId1', 'userId1', 1, 10);
+	const orderItem = new OrderItem(
+		'orderId1',
+		'productId1',
+		'userId1',
+		1,
+		'image',
+		'productTitle',
+		10
+	);
 
 	await createOrderItem(orderItem);
 
@@ -90,7 +138,15 @@ test('OrderItemModel: Create existing order item', async () => {
 
 test('OrderItemModel: Remove item from order', async () => {
 	//1. Create order item
-	const orderItem = new OrderItem('orderId1', 'productId1', 'userId1', 3, 30);
+	const orderItem = new OrderItem(
+		'orderId1',
+		'productId1',
+		'userId1',
+		3,
+		'image',
+		'productTitle',
+		30
+	);
 
 	await createOrderItem(orderItem);
 
@@ -107,7 +163,15 @@ test('OrderItemModel: Remove item from order', async () => {
 
 test('OrderItemModel: Remove more items from order than exists', async () => {
 	//1. Create order item
-	const orderItem = new OrderItem('orderId1', 'productId1', 'userId1', 1, 10);
+	const orderItem = new OrderItem(
+		'orderId1',
+		'productId1',
+		'userId1',
+		1,
+		'image',
+		'productTitle',
+		10
+	);
 
 	await createOrderItem(orderItem);
 
